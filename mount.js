@@ -40,32 +40,37 @@ const ref = require('ref-napi');
 const charPtr = ref.types.CString;
 const ulong = ref.types.ulong;
 const voidPtr = ref.types.void;
+const inti = ref.types.int
 
-const lib = ffi.Library('CLibrary', {
-    'mount': [ulong, [charPtr, charPtr, charPtr, ulong, voidPtr]],
-    'unmount': [ulong, [charPtr]],
-    'unmount2': [ulong, [charPtr, ulong]]
+const lib = ffi.Library('./CLibrary', {
+    'mount': [inti, [charPtr, charPtr, charPtr, ulong, voidPtr]],
+    'umount': [inti, [charPtr]],
+    'umount2': [inti, [charPtr, ulong]]
 });
 
 function mount(source, target, fstype, flags, data) {
-    const dataPtr = data ? Buffer.from(data + '\0', 'utf8') : ref.NULL;
+    let dataPtr = ref.NULL;
+    if (data) {
+        dataPtr = Buffer.from(data + '\0', 'utf8');
+    }
+    //const dataPtr = ref.NULL_POINTER;
     const result = lib.mount(source, target, fstype, flags, dataPtr);
     return result;
 }
 
-function unmount(target) {
-    const result = lib.unmount(target);
+function umount(target) {
+    const result = lib.umount(target);
     return result;
 }
 
-function unmount2(target, flags) {
-    const result = lib.unmount2(target, flags);
+function umount2(target, flags) {
+    const result = lib.umount2(target, flags);
     return result;
 }
 
 module.exports = {
     MountFlags,
     mount,
-    unmount,
-    unmount2
+    umount,
+    umount2
 };
