@@ -39,7 +39,6 @@ const ref = require('ref-napi');
 
 const charPtr = ref.types.CString;
 const ulong = ref.types.ulong;
-const voidPtr = ref.types.void;
 const inti = ref.types.int
 
 const lib = ffi.Library('./CLibrary', {
