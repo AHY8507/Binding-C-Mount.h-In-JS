@@ -1,5 +1,6 @@
+// Flag definitions for mount and umount system calls
 const MountFlags = {
-    MS: {
+    MS: { // Mount flags
         RDONLY: 1 << 0,
         NOSUID: 1 << 1,
         NODEV: 1 << 2,
@@ -25,33 +26,36 @@ const MountFlags = {
         STRICTATIME: 1 << 24,
         LAZYTIME: 1 << 25
     },
-    MNT: {
+    MNT: { // Unmount flags
         FORCE: 1 << 0,
         DETACH: 1 << 1,
         EXPIRE: 1 << 2,
-        NOFOLLOW: 1 << 3,
-        UNUSED: 1 << 4
+        NOFOLLOW: 1 << 3, // Obsolete 
+        UNUSED: 1 << 4 // Obsolete
     }
 };
 
+// FFI bindings to C library functions for mounting and unmounting filesystems
 const ffi = require('ffi-napi');
 const ref = require('ref-napi');
 
+// Define C types
 const charPtr = ref.types.CString;
 const ulong = ref.types.ulong;
-const inti = ref.types.int
+const inti = ref.types.int;
 
+// Load the C library
 const lib = ffi.Library('./CLibrary', {
     'mounting': [inti, [charPtr, charPtr, charPtr, ulong, charPtr]],
     'umounting': [inti, [charPtr]],
     'umounting2': [inti, [charPtr, ulong]]
 });
 
+// Wrapper functions for mount and unmount system calls
 function mount(source, target, fstype, flags, data) { 
     const result = lib.mounting(source, target, fstype, flags, data);
     return result;
 }
-
 
 function umount(target) {
     const result = lib.umounting(target);
@@ -63,6 +67,7 @@ function umount2(target, flags) {
     return result;
 }
 
+// Export the flags and functions
 module.exports = {
     MountFlags,
     mount,
