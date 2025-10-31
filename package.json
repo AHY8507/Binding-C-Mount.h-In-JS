@@ -1,0 +1,27 @@
+{
+  "name": "binding-c-mount.h-in-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mount.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AHY8507/Binding-C-Mount.h-In-JS.git"
+  },
+  "author": "AHY",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AHY8507/Binding-C-Mount.h-In-JS/issues"
+  },
+  "homepage": "https://github.com/AHY8507/Binding-C-Mount.h-In-JS#readme",
+  "dependencies": {
+    "ffi-napi": "^4.0.3",
+    "node-gyp": "^11.5.0",
+    "ref-napi": "^3.0.3"
+  }
+}
