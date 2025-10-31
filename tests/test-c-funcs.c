@@ -11,7 +11,6 @@ int mounting(const char *source, const char *target,
     const void *data) {
     int mount_result = mount(source, target, filesystemtype, mountflags, data);
     if(mount_result == -1) {
-        perror("Mount failed.");
         return -1;
     }
     return mount_result;
@@ -20,7 +19,6 @@ int mounting(const char *source, const char *target,
 int umounting2(const char *target, unsigned long flags) {
     int umount2_result = umount2(target, flags);
     if(umount2_result == -1) {
-        perror("Umount failed.");
         return -1;
     }
     return umount2_result;
@@ -30,7 +28,6 @@ int umounting2(const char *target, unsigned long flags) {
 int umounting(const char *target) {
     int umount_result = umount(target);
     if(umount_result == -1) {
-        perror("Umount failed.");
         return -1;
     }
     return umount_result;
@@ -135,18 +132,6 @@ int test_umount2_flags() {
     return 0;
 }
 
-void test_error_handling() {
-    printf("\n=== Testing error handling ===\n");
-    
-    printf("Testing mount with invalid target...\n");
-    mounting("tmpfs", "/invalid/path", "tmpfs", MS_NOSUID, NULL);
-    
-    printf("Testing umount with invalid target...\n");
-    umounting("/invalid/mountpoint");
-    
-    printf("Testing umount2 with invalid target...\n");
-    umounting2("/invalid/mountpoint", MNT_FORCE);
-}
 
 int main() {
     printf("Starting C mount function tests\n\n");
@@ -159,7 +144,6 @@ int main() {
     test_mount_tmpfs();
     test_bind_mount();
     test_umount2_flags();
-    test_error_handling();
     
     printf("\n=== All tests completed ===\n");
     

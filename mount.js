@@ -43,28 +43,24 @@ const voidPtr = ref.types.void;
 const inti = ref.types.int
 
 const lib = ffi.Library('./CLibrary', {
-    'mount': [inti, [charPtr, charPtr, charPtr, ulong, voidPtr]],
-    'umount': [inti, [charPtr]],
-    'umount2': [inti, [charPtr, ulong]]
+    'mounting': [inti, [charPtr, charPtr, charPtr, ulong, charPtr]],
+    'umounting': [inti, [charPtr]],
+    'umounting2': [inti, [charPtr, ulong]]
 });
 
-function mount(source, target, fstype, flags, data) {
-    let dataPtr = ref.NULL;
-    if (data) {
-        dataPtr = Buffer.from(data + '\0', 'utf8');
-    }
-    //const dataPtr = ref.NULL_POINTER;
-    const result = lib.mount(source, target, fstype, flags, dataPtr);
+function mount(source, target, fstype, flags, data) { //data string ""
+    const result = lib.mounting(source, target, fstype, flags, data);
     return result;
 }
 
+
 function umount(target) {
-    const result = lib.umount(target);
+    const result = lib.umounting(target);
     return result;
 }
 
 function umount2(target, flags) {
-    const result = lib.umount2(target, flags);
+    const result = lib.umounting2(target, flags);
     return result;
 }
 
