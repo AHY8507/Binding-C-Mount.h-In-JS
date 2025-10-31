@@ -10,6 +10,7 @@ const MountFlags = {
         DIRSYNC: 1 << 7,
         NOATIME: 1 << 10,
         NODIRATIME: 1 << 11,
+        BIND: 1 << 12,
         MOVE: 1 << 13,
         REC: 1 << 14,
         SILENT: 1 << 15,
@@ -22,8 +23,7 @@ const MountFlags = {
         KERNMOUNT: 1 << 22,
         I_VERSION: 1 << 23,
         STRICTATIME: 1 << 24,
-        LAZYTIME: 1 << 25,
-        BIND: 1 << 12
+        LAZYTIME: 1 << 25
     },
     MNT: {
         FORCE: 1 << 0,
@@ -47,7 +47,7 @@ const lib = ffi.Library('./CLibrary', {
     'umounting2': [inti, [charPtr, ulong]]
 });
 
-function mount(source, target, fstype, flags, data) { //data string ""
+function mount(source, target, fstype, flags, data) { 
     const result = lib.mounting(source, target, fstype, flags, data);
     return result;
 }

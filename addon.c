@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <sys/mount.h>
-//gcc -shared -o CLibrary.so addon.c
+
 
 int mounting(const char *source, const char *target,
     const char *filesystemtype, unsigned long mountflags,
