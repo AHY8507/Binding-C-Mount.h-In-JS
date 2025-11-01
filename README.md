@@ -191,6 +191,7 @@ Marks mount for expiration if unused (requires kernel support).
 ---
 
 ### Example Usage
+#### **Method Signature (all identical):**
 ```javascript
 const { EasyMount } = require('./mount');
 
@@ -222,7 +223,6 @@ EasyMount.Umount.detach('/tmp');
 // Mark for expiration
 EasyMount.Umount.expire('/var/tmp');
 
-#### **Method Signature (all identical):**
 ```
 ### Quick Start Tutorial
 1. **Basic Setup**
