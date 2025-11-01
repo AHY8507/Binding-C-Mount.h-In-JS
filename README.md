@@ -146,7 +146,7 @@ Namespace for **unmount operations** with optional flags.
 
 | Method   | Flag Used     | Behavior |
 |----------|---------------|--------|
-| `force`  | `MNT.FORCE`  | Standard unmount using `umount()` |
+| `force`  | `MNT.FORCE`  |Force umount|
 | `detach` | `MNT.DETACH`  | Lazy unmount — detaches immediately |
 | `expire` | `MNT.EXPIRE`  | Mark for auto-expire if unused |
 
