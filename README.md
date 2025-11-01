@@ -99,6 +99,131 @@ Unmounts a filesystem with additional flags.
 
 **Returns:**  
 `0` on success, `-1` on error
+## `EasyMount`
+
+A high-level, ergonomic wrapper around low-level `mount` and `umount` system calls using FFI.  
+Provides **named, readable methods** for common mount flags instead of raw bitmasks.
+
+> **All `EasyMount.Mount.*` methods return `0` on success, `-1` on failure.**  
+> **All `EasyMount.Umount.*` methods return `0` on success, `-1` on failure.**
+
+---
+
+### `EasyMount.Mount`
+
+Namespace containing **pre-configured mount operations** with specific flags.
+
+| Method | Flag Used | Use Case |
+|--------|-----------|---------|
+| `readOnly` | `MS.RDONLY` | Mount filesystem as read-only |
+| `noSetUID` | `MS.NOSUID` | Block SUID/SGID bit execution |
+| `noDevice` | `MS.NODEV` | Disallow device files (`/dev/*`) |
+| `noExecute` | `MS.NOEXEC` | Prevent execution of binaries/scripts |
+| `sync` | `MS.SYNCHRONOUS` | Force synchronous I/O (no caching) |
+| `remount` | `MS.REMOUNT` | Remount an already-mounted filesystem |
+| `mandLock` | `MS.MANDLOCK` | Enable mandatory file locking |
+| `dirSync` | `MS.DIRSYNC` | Directory operations are synchronous |
+| `noAtime` | `MS.NOATIME` | Do not update access time |
+| `noDirAtime` | `MS.NODIRATIME` | Do not update directory access time |
+| `bind` | `MS.BIND` | Create a bind mount |
+| `move` | `MS.MOVE` | Atomically move a subtree |
+| `recursive` | `MS.REC` | Apply bind/recursive to subtree |
+| `silent` | `MS.SILENT` | Suppress certain kernel messages |
+| `posixACL` | `MS.POSIXACL` | Enable POSIX ACLs |
+| `unbindable` | `MS.UNBINDABLE` | Make mount unbindable |
+| `private` | `MS.PRIVATE` | Treat as private mount |
+| `slave` | `MS.SLAVE` | Slave mount propagation |
+| `shared` | `MS.SHARED` | Shared mount propagation |
+| `relAtime` | `MS.RELATIME` | Update atime only if older than mtime/ctime |
+| `kernMount` | `MS.KERNMOUNT` | Kernel internal mount |
+| `iVersion` | `MS.I_VERSION` | Increment inode version |
+| `strictAtime` | `MS.STRICTATIME` | Always update atime |
+| `lazyTime` | `MS.LAZYTIME` | Delay atime/mtime updates |
+
+### `EasyMount.Umount`
+
+Namespace for **unmount operations** with optional flags.
+
+| Method   | Flag Used     | Behavior |
+|----------|---------------|--------|
+| `force`  | `MNT.FORCE`  | Standard unmount using `umount()` |
+| `detach` | `MNT.DETACH`  | Lazy unmount — detaches immediately |
+| `expire` | `MNT.EXPIRE`  | Mark for auto-expire if unused |
+
+---
+
+#### **Method Signatures:**
+
+##### `force(target)`
+Unmounts normally.
+
+**Parameters:**
+| Parameter | Type     | Description              |
+|-----------|----------|--------------------------|
+| `target`  | `string` | Mount point to unmount   |
+
+**Returns:** `0` on success, `-1` on error
+
+---
+
+##### `detach(target)`
+Lazy unmount — detaches immediately, processes can still use it.
+
+**Parameters:**
+| Parameter | Type     | Description              |
+|-----------|----------|--------------------------|
+| `target`  | `string` | Mount point              |
+
+**Returns:** `0` on success, `-1` on error
+
+---
+
+##### `expire(target)`
+Marks mount for expiration if unused (requires kernel support).
+
+**Parameters:**
+| Parameter | Type     | Description              |
+|-----------|----------|--------------------------|
+| `target`  | `string` | Mount point              |
+
+**Returns:** `0` on success, `-1` on error
+
+---
+
+### Example Usage
+```javascript
+const { EasyMount } = require('./mount');
+
+// Mount tmpfs with security flags
+EasyMount.Mount.noExecute('none', '/mnt/secure', 'tmpfs', 'size=5M');
+EasyMount.Mount.noSetUID('none', '/mnt/secure', 'tmpfs', '');
+EasyMount.Mount.noDevice('none', '/mnt/secure', 'tmpfs', '');
+
+// Bind mount
+EasyMount.Mount.bind('/src', '/dst', null, '');
+
+// Remount as read-only
+EasyMount.Mount.remount('none', '/mnt/data', 'tmpfs', 'size=10M');
+EasyMount.Mount.readOnly('none', '/mnt/data', 'tmpfs', '');
+
+// Unmount
+EasyMount.Umount.force('/mnt/data');
+EasyMount.Umount.detach('/mnt/tmp');  // Lazy unmount
+```
+```javascript
+const { EasyMount } = require('./mount');
+
+// Standard unmount
+EasyMount.Umount.force('/mnt/data');
+
+// Lazy unmount (detach)
+EasyMount.Umount.detach('/tmp');
+
+// Mark for expiration
+EasyMount.Umount.expire('/var/tmp');
+
+#### **Method Signature (all identical):**
+```
 ### Quick Start Tutorial
 1. **Basic Setup**
 ```javascript
@@ -191,6 +316,7 @@ sudo su
 node test-full-js1.js
 node test-full-js2.js
 node test-full-flags.js
+node test-full-flags-easy.js
 ```
 ## Common Filesystem Types
 
