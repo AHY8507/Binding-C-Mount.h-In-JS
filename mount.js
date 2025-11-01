@@ -67,9 +67,46 @@ function umount2(target, flags) {
     return result;
 }
 
+// EasyMount namespace to hold Mount and Umount objects
+
+const EasyMount = {
+    Mount: {
+        readOnly: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.RDONLY, data),
+        noSetUID: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.NOSUID, data),
+        noDevice: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.NODEV, data),
+        noExecute: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.NOEXEC, data),
+        sync: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.SYNCHRONOUS, data),
+        remount: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.REMOUNT, data),
+        mandLock: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.MANDLOCK, data),
+        dirSync: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.DIRSYNC, data),
+        noAtime: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.NOATIME, data),
+        noDirAtime: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.NODIRATIME, data),
+        bind: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.BIND, data),
+        move: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.MOVE, data),
+        recursive: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.REC, data),
+        silent: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.SILENT, data),
+        posixACL: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.POSIXACL, data),
+        unbindable: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.UNBINDABLE, data),
+        private: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.PRIVATE, data),
+        slave: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.SLAVE, data),
+        shared: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.SHARED, data),
+        relAtime: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.RELATIME, data),
+        kernMount: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.KERNMOUNT, data),
+        iVersion: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.I_VERSION, data),
+        strictAtime: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.STRICTATIME, data),
+        lazyTime: (source, target, fstype, data) => lib.mounting(source, target, fstype, MountFlags.MS.LAZYTIME, data)
+    },
+    Umount: {
+        force: (target) => lib.umounting(target),
+        detach: (target) => lib.umounting2(target, MountFlags.MNT.DETACH),
+        expire: (target) => lib.umounting2(target, MountFlags.MNT.EXPIRE)
+    }
+};
+
 // Export the flags and functions
 module.exports = {
     MountFlags,
+    EasyMount,
     mount,
     umount,
     umount2
