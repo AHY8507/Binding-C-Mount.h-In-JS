@@ -1,12 +1,13 @@
 // include necessary headers
 #include <stdio.h>
+#include <string.h>
 #include <sys/mount.h>
 
 // Function to mount a filesystem
 int mounting(const char *source, const char *target,
     const char *filesystemtype, unsigned long mountflags,
     const char *data) {
-    if(data == "") {
+    if(data[0] == '\0') {
         data = NULL;
     }
     int mount_result = mount(source, target, filesystemtype, mountflags, data);
